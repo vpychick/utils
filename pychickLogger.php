@@ -49,16 +49,17 @@ class pychickLogger
     /** @var bool выводить ли дополнительно журнал в консоль. По умолчанию ИСТИНА для консольных скриптов и ЛОЖЬ для серверных */
     protected bool $bWriteToConsole;
 
-    public function __construct(string $sFileName, pychickLoggerLevel $nLevel)
+    public function __construct(string $sFileName, pychickLoggerLevel $nLevel, bool $bWriteToConsole=true, bool $bAppend=true)
     {
         $this->nLevel=$nLevel;
         $this->sLogFileName=$sFileName;
-        $this->fLog = fopen($sFileName, "a");
+        if($bAppend) $this->fLog = fopen($sFileName, "a");
+        else $this->fLog = fopen($sFileName, "w");
         if(php_sapi_name()=="cli") {
             $host= gethostname();
             $ip = gethostbyname($host);
             $this->sIp=$ip;
-            $this->bWriteToConsole=true;
+            $this->bWriteToConsole=$bWriteToConsole;
         }
         else {
             $this->sIp=$_SERVER["REMOTE_ADDR"];
@@ -100,7 +101,7 @@ class pychickLogger
 
     public function warn(string $sMessage) : bool
     {
-        if($this->nLevel>=pychickLoggerLevel::WARN) return $this->logLine(pychickLoggerLevel::WARN, $sMessage);
+        if($this->nLevel->value>=pychickLoggerLevel::WARN->value) return $this->logLine(pychickLoggerLevel::WARN, $sMessage);
         else return false;
     }
 
@@ -111,13 +112,13 @@ class pychickLogger
 
     public function debug(string $sMessage) : bool
     {
-        if($this->nLevel>=pychickLoggerLevel::DEBUG) return $this->logLine(pychickLoggerLevel::DEBUG, $sMessage);
+        if($this->nLevel->value>=pychickLoggerLevel::DEBUG->value) return $this->logLine(pychickLoggerLevel::DEBUG, $sMessage);
         else return false;
     }
 
     public function trace(string $sMessage) : bool
     {
-        if($this->nLevel>=pychickLoggerLevel::TRACE) return $this->logLine(pychickLoggerLevel::TRACE, $sMessage);
+        if($this->nLevel->value>=pychickLoggerLevel::TRACE->value) return $this->logLine(pychickLoggerLevel::TRACE, $sMessage);
         else return false;
     }
 
