@@ -6,6 +6,8 @@
  * @author Pychick
  */
 
+namespace pychick\utils;
+
 /**
  * перечисление возможных уровней журналирования
  */
